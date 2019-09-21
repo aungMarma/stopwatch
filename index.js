@@ -1,46 +1,41 @@
-function StopWatch() {
-	let state = {
-		duration: 0,
-		start: false,
-		interval: null
-	};
+// With DOM
 
-	this.start = function() {
-		if (state.start) {
-			return 'StopWatch already started.';
-		}
-		state.start = true;
-		// On every second, increment duration
-		state.interval = setInterval(function() {
-			state.duration++;
-		}, 1000);
-	};
+let duration = 0;
+let start = false;
+let intv = null;
 
-	this.reset = function() {
-		if (state.start) {
-			this.stop();
-		}
-	};
+// To show duration
+const elem = document.getElementById('duration-text');
 
-	this.duration = function() {
-		return state.duration;
-	};
-
-	this.stop = function() {
-		if (!state.start) {
-			return "StopWatch hasn't started.";
-		}
-		clearInterval(state.interval);
-		state.interval = null;
-		state.duration = 0;
-		state.start = false;
-	};
-}
-const sw = new StopWatch();
-function start() {
-	let elem = document.getElementById('duration-text');
-	sw.start();
-	setInterval(function() {
-		elem.textContent = sw.duration() + ' sec';
+// Listener on start button
+function onStart() {
+	if (start) {
+		elem.textContent = 'STOPWATCH has already started.';
+	}
+	// Clear exiting interval
+	if (intv) {
+		clearInterval(intv);
+	}
+	intv = setInterval(function() {
+		elem.textContent = duration++ + ' seconds';
 	}, 1000);
+	start = true;
+}
+
+// Listener on stop button
+function onStop() {
+	if (!start) {
+		elem.textContent = "STOPWATCH hasn't started yet.";
+	}
+	clearInterval(intv);
+	duration = 0;
+	start = false;
+	elem.textContent = duration + ' seconds';
+}
+
+// Listener on reset button
+function onReset() {
+	if (start) {
+		onStop();
+	}
 }
